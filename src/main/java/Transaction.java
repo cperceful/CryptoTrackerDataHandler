@@ -1,13 +1,26 @@
+import com.google.gson.annotations.SerializedName;
+
 import java.math.BigDecimal;
 
 public class Transaction
 {
+    @SerializedName("Token")
     private String token;
+
+    @SerializedName("Date")
     private String date;
+
+    @SerializedName("Amount")
     private double amount;
+
+    @SerializedName("transType")
     private eTransactionType transactionType;
+
+    @SerializedName("AverageCost")
     private BigDecimal averageCost;
-    private BigDecimal fee;
+
+    @SerializedName("Fee")
+    private double fee;
 
     public Transaction(){}
 
@@ -61,12 +74,12 @@ public class Transaction
         this.averageCost = averageCost;
     }
 
-    public BigDecimal getFee()
+    public double getFee()
     {
         return fee;
     }
 
-    public void setFee(BigDecimal fee)
+    public void setFee(double fee)
     {
         this.fee = fee;
     }

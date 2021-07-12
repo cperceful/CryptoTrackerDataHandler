@@ -1,9 +1,12 @@
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 public class Position
 {
     private String token;
+    private double amountPurchased;
     private double amount;
+    private BigDecimal totalCost;
     private BigDecimal averageCost;
     private BigDecimal lastPrice;
     private BigDecimal costBasis;
@@ -20,10 +23,14 @@ public class Position
 
     public void calculate()
     {
-        BigDecimal bdAmount = new BigDecimal(String.valueOf(amount));
+        amount = amountPurchased - totalFees;
+        //need amount in BigDecimal
+        BigDecimal bdAmount = BigDecimal.valueOf(amount);
 
+        averageCost = totalCost.divide(bdAmount, RoundingMode.HALF_EVEN);
         costBasis = bdAmount.multiply(averageCost);
-        currentValue = bdAmount.multiply(lastPrice);
+        currentValue = bdAmount.multiply(costBasis);
+        netProfit = currentValue.subtract(costBasis);
     }
 
     public String getToken()
@@ -41,19 +48,9 @@ public class Position
         return amount;
     }
 
-    public void setAmount(double amount)
-    {
-        this.amount = amount;
-    }
-
     public BigDecimal getAverageCost()
     {
         return averageCost;
-    }
-
-    public void setAverageCost(BigDecimal averageCost)
-    {
-        this.averageCost = averageCost;
     }
 
     public BigDecimal getLastPrice()
@@ -73,12 +70,8 @@ public class Position
 
     public BigDecimal getCurrentValue()
     {
-        return currentValue;
-    }
 
-    public void setCurrentValue(BigDecimal currentValue)
-    {
-        this.currentValue = currentValue;
+        return currentValue;
     }
 
     public BigDecimal getNetProfit()
@@ -88,7 +81,9 @@ public class Position
 
     public void calculateNetProfit()
     {
-        BigDecimal bdAmount = new BigDecimal(String.valueOf(amount));
+        BigDecimal bdAmount = BigDecimal.valueOf(amount);
+        BigDecimal value = lastPrice.multiply(bdAmount);
+        this.netProfit = value.subtract(this.getCostBasis());
     }
 
     public double getTotalFees()
@@ -100,4 +95,15 @@ public class Position
     {
         this.totalFees = totalFees;
     }
+
+    public void setAmountPurchased(double amountPurchased)
+    {
+        this.amountPurchased = amountPurchased;
+    }
+
+    public void setTotalCost(BigDecimal totalCost)
+    {
+        this.totalCost = totalCost;
+    }
+
 }
